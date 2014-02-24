@@ -1,0 +1,29 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#">Home</a></li>
+    <li><a ng-href="#">About</a></li>
+    <li><a ng-href="#">Contact</a></li>
+  </ul>
+  <h3 class="text-muted">vantage exercise</h3>
+</div>
+
+<div>
+  <h4>The Candidates</h4>
+    <p ng-repeat="item in items.results">{{item.candidate_name}}</p>
+  </div>
+</div>
+<br>
+<div ng-app="vantageApp">
+  <h4>Highcharts examples using NYT 2008 US Presidential Campaign Data</h4>
+  <div ng-controller="MainCtrl">
+    <button ng-click="candidateReceipts()">Candidate Receipts</button>
+    <button ng-click="partySpend()">Party Spending</button>
+      <div class="row">
+        <highchart id="chart1" config="chartConfig" series="chartConfig.series" class="span10" style="height: 600px; width: 800px; margin: 0 auto;" ></highchart>
+      </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>♥ from the Yeoman team</p>
+</div>
