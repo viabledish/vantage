@@ -233,7 +233,6 @@ angular.module('vantageApp')
       mapIndex++;
       if (mapIndex >= mapData.length) {
         clearInterval(populateMapData);
-        alert('stop!')
       };
       var nytUri = 'http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/states/' + mapData[mapIndex].name + '.json?api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK';
       $http.jsonp(nytUri).success(function (data) {
@@ -268,7 +267,7 @@ angular.module('vantageApp')
             return '<b>Series name: ' + this.point.candidate + '</b><br>' +
                 'Point name: ' + this.point.name + '<br>' +
                 'Value: ' + this.point.value;
-        }
+      }
       },
       series : [{
           data : mapData,
