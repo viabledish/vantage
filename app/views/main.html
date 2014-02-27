@@ -6,21 +6,23 @@
   </ul>
   <h3 class="text-muted">vantage exercise</h3>
 </div>
-
-<div>
-  <h4>The Candidates</h4>
-    <p ng-repeat="item in items.results">{{item.candidate_name}}</p>
+<div data-ng-controller="MainCtrl">
+  <div>
+    <h4>The Candidates</h4>
+      <input type="search" ng-model="candidateFilter" placeholder="filter candidates..." ng-change="candidateReceipts()" />
+      <p ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))">{{item.candidate_name}}</p>
+      <!-- <p ng-repeat="item in items.results | filter:candidateFilter">{{item.candidate_name}}</p> -->
   </div>
-</div>
-<br>
-<div ng-app="vantageApp">
-  <h4>Highcharts examples using NYT 2008 US Presidential Campaign Data</h4>
-  <div ng-controller="MainCtrl">
-    <button ng-click="candidateReceipts()">Candidate Receipts</button>
-    <button ng-click="partySpend()">Party Spending</button>
-      <div class="row">
-        <highchart id="chart1" config="chartConfig" series="chartConfig.series" class="span10" style="height: 600px; width: 800px; margin: 0 auto;" ></highchart>
-      </div>
+  <br>
+  <div ng-app="vantageApp">
+    <h4>Highcharts examples using NYT 2008 US Presidential Campaign Data</h4>
+    <div ng-controller="MainCtrl">
+      <button ng-click="candidateReceipts(filteredItems)">Candidate Receipts</button>
+      <button ng-click="partySpend()">Party Spending</button>
+        <div class="row">
+          <highchart id="chart1" config="chartConfig" series="chartConfig.series" class="span10" style="height: 600px; width: 800px; margin: 0 auto;" ></highchart>
+        </div>
+    </div>
   </div>
 </div>
 
