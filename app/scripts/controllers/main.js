@@ -12,7 +12,12 @@ angular.module('vantageApp')
     $scope.chartData = [];
     $scope.chartConfig = {};
 
-    $scope.candidateResult = {};
+    $scope.candidateResult = [];
+    $scope.candidateDefs = 
+                  [{ field: 'candidate_id', displayName: 'Candidate ID', width: "150"},
+                   { field: 'total_contributions', displayName: 'Total Contributions', width: "150" },
+                   { field: 'total_receipts_party_rank', displayName: 'Party rank (total receipts)', width: "200" }];
+    $scope.gridOptions = { data: 'candidateResult', columnDefs: 'candidateDefs' };
 
     $scope.oneAtATime = false;
 
@@ -101,8 +106,11 @@ angular.module('vantageApp')
       var lname = name.split(',', 1);
       $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/candidates/' 
         + lname + '.json?query=&api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
-        var candidateData = angular.fromJson(data.results)
-        $scope.candidateResult = candidateData;
+        var candidateData = {};
+        candidateData.candidate_id = data.results[0].candidate_id
+        candidateData.total_contributions = data.results[0].total_contributions
+        candidateData.total_receipts_party_rank = data.results[0].total_receipts_party_rank
+        $scope.candidateResult = [candidateData];
       });
     };
 });

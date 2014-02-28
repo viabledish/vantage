@@ -1,3 +1,10 @@
+<style>
+.gridStyle {
+    border: 1px solid rgb(212,212,212);
+    width: 500px; 
+    height: 75px
+};
+</style>
 <div class="header">
   <ul class="nav nav-pills pull-right">
     <li class="active"><a ng-href="#">Home</a></li>
@@ -8,18 +15,6 @@
 </div>
 <div data-ng-controller="MainCtrl" ng-app="vantageApp">
   <div>
-    <h4>The Candidates</h4>
-      <input type="search" ng-model="candidateFilter" placeholder="filter candidates..." ng-change="candidateReceipts()" />
-      <!-- <p ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))"><a ng-click="candidateSearch(item.candidate_name)">{{item.candidate_name}}</a></p> -->
-      <!-- <p ng-repeat="item in items.results | filter:candidateFilter">{{item.candidate_name}}</p> --> 
-      <accordion close-others="false" ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))">
-        <accordion-group heading="{{item.candidate_name}}" ng-click="candidateSearch(item.candidate_name)">
-        <div ng-model="candidateSearch">{{candidateResult}}</div>
-        </accordion-group>
-      </accordion>
-  </div>
-  <br>
-  <div>
     <h4>Highcharts examples using NYT 2008 US Presidential Campaign Data</h4>
     <div ng-controller="MainCtrl">
       <button ng-click="candidateReceipts(filteredItems)">Candidate Receipts</button>
@@ -28,6 +23,17 @@
           <highchart id="chart1" config="chartConfig" series="chartConfig.series" class="span10" style="height: 600px; width: 800px; margin: 0 auto;" ></highchart>
         </div>
     </div>
+  </div>
+  <div>
+    <h4>The Candidates</h4>
+    <h5>(click on a name for more details)</h5>
+      <input class="form-control" type="search" ng-model="candidateFilter" placeholder="filter candidates..." ng-change="candidateReceipts()" />
+      <br>
+      <accordion close-others="false" ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))">
+        <accordion-group heading="{{item.candidate_name}}" ng-click="candidateSearch(item.candidate_name)">
+        <div ng-grid="gridOptions" class="gridStyle"></div>
+        </accordion-group>
+      </accordion>
   </div>
 </div>
 
