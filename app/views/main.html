@@ -6,15 +6,20 @@
   </ul>
   <h3 class="text-muted">vantage exercise</h3>
 </div>
-<div data-ng-controller="MainCtrl">
+<div data-ng-controller="MainCtrl" ng-app="vantageApp">
   <div>
     <h4>The Candidates</h4>
       <input type="search" ng-model="candidateFilter" placeholder="filter candidates..." ng-change="candidateReceipts()" />
-      <p ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))">{{item.candidate_name}}</p>
-      <!-- <p ng-repeat="item in items.results | filter:candidateFilter">{{item.candidate_name}}</p> -->
+      <!-- <p ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))"><a ng-click="candidateSearch(item.candidate_name)">{{item.candidate_name}}</a></p> -->
+      <!-- <p ng-repeat="item in items.results | filter:candidateFilter">{{item.candidate_name}}</p> --> 
+      <accordion close-others="false" ng-repeat="item in (filteredItems = (items.results | filter:candidateFilter))">
+        <accordion-group heading="{{item.candidate_name}}" ng-click="candidateSearch(item.candidate_name)">
+        <div ng-model="candidateSearch">{{candidateResult}}</div>
+        </accordion-group>
+      </accordion>
   </div>
   <br>
-  <div ng-app="vantageApp">
+  <div>
     <h4>Highcharts examples using NYT 2008 US Presidential Campaign Data</h4>
     <div ng-controller="MainCtrl">
       <button ng-click="candidateReceipts(filteredItems)">Candidate Receipts</button>

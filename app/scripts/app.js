@@ -4,7 +4,8 @@ angular.module('vantageApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'highcharts-ng'
+  'highcharts-ng',
+  'ui.bootstrap'
 ])
   .config(function ($routeProvider) {
     $routeProvider

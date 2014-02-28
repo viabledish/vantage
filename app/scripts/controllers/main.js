@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('vantageApp')
-  .controller('MainCtrl', function ($scope, $http, $filter) {
+  .controller('MainCtrl', function ($scope, $http, $filter, $modal) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -11,6 +11,10 @@ angular.module('vantageApp')
     $scope.items = [];
     $scope.chartData = [];
     $scope.chartConfig = {};
+
+    $scope.candidateResult = {};
+
+    $scope.oneAtATime = false;
 
     var getItems = function() {
       $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/totals.json?api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
@@ -91,5 +95,14 @@ angular.module('vantageApp')
 
         loading: false
       }  
+    };
+
+    $scope.candidateSearch = function(name) {
+      var lname = name.split(',', 1);
+      $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/candidates/' 
+        + lname + '.json?query=&api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
+        var candidateData = angular.fromJson(data.results)
+        $scope.candidateResult = candidateData;
+      });
     };
 });
