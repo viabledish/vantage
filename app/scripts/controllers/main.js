@@ -34,6 +34,51 @@ angular.module('vantageApp')
       $scope.candidateReceipts($scope.filteredItems);
     }, true);
 
+    var pieChartConfig = function (chartType, data, name, titleText, options) {
+      $scope.chartConfig = {
+        options: {
+            chart: {
+                type: chartType
+            }
+        },
+        series: [{
+            data: data,
+            name: name
+        }],
+        title: {
+          text: titleText
+        },
+        plotOptions: {
+          pie: {
+             allowPointSelect: true,
+             cursor: 'pointer',
+         }
+        }, 
+        loading: false
+      }
+    };
+
+    var barChartConfig = function (chartType, data, name, titleText, options) {
+      $scope.chartConfig = {
+        options: {
+            chart: {
+                type: chartType
+            }
+        },
+        series: [{
+            data: data,
+        }],
+        xAxis: {
+          categories: name, 
+          },
+          title: {
+              text: titleText
+          },
+
+        loading: false
+      }  
+    };
+
     $scope.partySpend = function () {
       var demSpend = 0;
       var repubSpend= 0;
@@ -46,29 +91,8 @@ angular.module('vantageApp')
         }
       }
 
-  		var totalSpend = [['Democrats',demSpend],['Republicans', repubSpend]]
-      
-      $scope.chartConfig = {
-        options: {
-            chart: {
-                type: 'pie'
-            }
-        },
-        series: [{
-            data: totalSpend,
-            name: 'Party Spend'
-        }],
-        title: {
-        	text: 'US 2008 Campaign Spend by Party'
-    		},
-    		plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-          }
-    		},	
-        loading: false
-      }
+  		var totalSpend = [['Democrats',demSpend],['Republicans', repubSpend]];
+      pieChartConfig('pie', totalSpend, 'Party Spend', 'US 2008 Campaign Spend by Party');
     };
 
     $scope.candidateReceipts = function (data) {
@@ -81,25 +105,7 @@ angular.module('vantageApp')
   				cd.push(receipt);
   				names.push(data[i].candidate_name);
       }
-
-      $scope.chartConfig = {
-        options: {
-            chart: {
-                type: 'bar'
-            }
-        },
-        series: [{
-            data: cd,
-        }],
-        xAxis: {
-      		categories: names, 
-        	},
-          title: {
-              text: 'US 2008 Campaign Total Receipts by Candidate'
-          },
-
-        loading: false
-      }  
+      barChartConfig('bar', cd, names, 'US 2008 Campaign Total Receipts by Candidate');
     };
 
     $scope.candidateSearch = function(name) {
