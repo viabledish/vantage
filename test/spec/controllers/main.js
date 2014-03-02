@@ -41,10 +41,12 @@ describe('Controller: MainCtrl', function () {
     it('should be defined', function () {
       expect(scope.partySpend).toBeDefined();
     });
-    it('should have the chart series populated', function () {
-      spyOn(scope, 'partySpend');
-      scope.partySpend();
-      expect(scope.partySpend).toHaveBeenCalled();
+    it('should call function pieChartConfig with the appropriate arguments', function () {
+      var jsonResponse = { results: [{'candidate_name': 'Barack Obama', 'total_receipts': 10, 'party': 'D'}, {'candidate_name': 'John McCain', 'total_receipts': 5, 'party': 'R'}] };
+      spyOn(scope, 'partySpend').andCallThrough();
+      spyOn(scope, 'pieChartConfig').andCallThrough();
+      scope.partySpend(jsonResponse);
+      expect(scope.pieChartConfig).toHaveBeenCalledWith('pie', [['Democrats',10],['Republicans', 5]], 'Party Spend', 'US 2008 Campaign Spend by Party');
     });
   });
 
@@ -52,10 +54,33 @@ describe('Controller: MainCtrl', function () {
     it('should be defined', function () {
       expect(scope.candidateReceipts).toBeDefined();
     });
-    it('should to have the chart series populated', function () {
-      spyOn(scope, 'candidateReceipts');
-      scope.candidateReceipts();
-      expect(scope.candidateReceipts).toHaveBeenCalled();
+    it('should call function barChartConfig with the appropriate arguments', function () {
+      var jsonResponse = [{'candidate_name': 'Barack Obama', 'total_receipts': 10, 'party': 'D'}, {'candidate_name': 'John McCain', 'total_receipts': 5, 'party': 'R'}];
+      spyOn(scope, 'candidateReceipts').andCallThrough();
+      spyOn(scope, 'barChartConfig').andCallThrough();
+      scope.candidateReceipts(jsonResponse);
+      expect(scope.barChartConfig).toHaveBeenCalledWith('bar',[10, 5], ['Barack Obama', 'John McCain'], 'US 2008 Campaign Total Receipts by Candidate');
+    });
+  });
+
+  describe('candidateSearch function', function () {
+    it('should be defined', function () {
+      expect(scope.candidateSearch).toBeDefined();
+    });
+    it('should be called with the appropriate arguments', function () {
+      var lname = 'Obama';
+      spyOn(scope, 'candidateSearch').andCallThrough();
+      scope.candidateSearch(lname);
+      expect(scope.candidateSearch).toHaveBeenCalled();
+    });
+    it('should assign scope.candidateResult appropriately', function () {
+      var lname = 'Obama';
+      //var data = [{candidateId: 'P80003338', totalContributions: '100', partyRank: 1}];
+      spyOn(scope, 'candidateSearch').andCallThrough();
+      spyOn(scope, 'candidateResult');
+      scope.candidateSearch(lname);
+      expect(scope.candidateResult).toBeDefined();
+      //not entirely sure how to test that candidateResult was assigne properly
     });
   });
 });

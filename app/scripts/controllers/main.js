@@ -19,22 +19,24 @@ angular.module('vantageApp')
                    { field: 'total_receipts_party_rank', displayName: 'Party rank (total receipts)', width: "200" }];
     $scope.gridOptions = { data: 'candidateResult', columnDefs: 'candidateDefs' };
 
-    $scope.oneAtATime = false;
+    $scope.oneAtATime = true;
 
-    var getItems = function() {
+    $scope.filteredItems;
+
+    $scope.getItems = function() {
       $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/totals.json?api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
         $scope.items = data;
       });
     };
 
-    getItems();
+    $scope.getItems();
 
     // watch the expression, and update the UI on change.
     $scope.$watch('candidateFilter', function () {
       $scope.candidateReceipts($scope.filteredItems);
     }, true);
 
-    var pieChartConfig = function (chartType, data, name, titleText, options) {
+    $scope.pieChartConfig = function (chartType, data, name, titleText, options) {
       $scope.chartConfig = {
         options: {
             chart: {
@@ -58,8 +60,11 @@ angular.module('vantageApp')
       }
     };
 
-    var barChartConfig = function (chartType, data, name, titleText, options) {
+    $scope.barChartConfig = function (chartType, data, name, titleText, options) {
       $scope.chartConfig = {
+        chart: {
+            renderTo: 'container',
+        },
         options: {
             chart: {
                 type: chartType
@@ -79,33 +84,33 @@ angular.module('vantageApp')
       }  
     };
 
-    $scope.partySpend = function () {
+    $scope.partySpend = function (data) {
       var demSpend = 0;
       var repubSpend= 0;
 
-      for (var i = 0; i < $scope.items.results.length; i++) {
-        if ($scope.items.results[i].party == "D") {
-          demSpend += parseInt($scope.items.results[i].total_receipts);
+      for (var i = 0; i < data.results.length; i++) {
+        if (data.results[i].party == "D") {
+          demSpend += parseInt(data.results[i].total_receipts);
         } else {
-          repubSpend += parseInt($scope.items.results[i].total_receipts);
+          repubSpend += parseInt(data.results[i].total_receipts);
         }
       }
-
+      console.log(data);
   		var totalSpend = [['Democrats',demSpend],['Republicans', repubSpend]];
-      pieChartConfig('pie', totalSpend, 'Party Spend', 'US 2008 Campaign Spend by Party');
+      $scope.pieChartConfig('pie', totalSpend, 'Party Spend', 'US 2008 Campaign Spend by Party');
     };
 
     $scope.candidateReceipts = function (data) {
-  		var cd = [];
+  		var candidateData = [];
   		var names = [];
-  		
+  		console.log(data);
       for (var i = 0; i < data.length; i++) {
   				var receipt = []
   				receipt = parseInt(data[i].total_receipts);
-  				cd.push(receipt);
+  				candidateData.push(receipt);
   				names.push(data[i].candidate_name);
       }
-      barChartConfig('bar', cd, names, 'US 2008 Campaign Total Receipts by Candidate');
+      $scope.barChartConfig('bar', candidateData, names, 'US 2008 Campaign Total Receipts by Candidate');
     };
 
     $scope.candidateSearch = function(name) {
@@ -113,9 +118,9 @@ angular.module('vantageApp')
       $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/candidates/' 
         + lname + '.json?query=&api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
         var candidateData = {};
-        candidateData.candidate_id = data.results[0].candidate_id
-        candidateData.total_contributions = data.results[0].total_contributions
-        candidateData.total_receipts_party_rank = data.results[0].total_receipts_party_rank
+        candidateData.candidate_id = data.results[0].candidate_id;
+        candidateData.total_contributions = data.results[0].total_contributions;
+        candidateData.total_receipts_party_rank = data.results[0].total_receipts_party_rank;
         $scope.candidateResult = [candidateData];
       });
     };
