@@ -11,6 +11,7 @@ angular.module('vantageApp')
     $scope.items = [];
     $scope.chartData = [];
     $scope.chartConfig = {};
+    $scope.barChartData = [];
 
     $scope.candidateResult = [];
     $scope.candidateDefs = 
@@ -32,9 +33,18 @@ angular.module('vantageApp')
     $scope.getItems();
 
     // watch the expression, and update the UI on change.
-    $scope.$watch('candidateFilter', function () {
-      $scope.candidateReceipts($scope.filteredItems);
-    }, true);
+    $scope.$watchCollection('filteredItems', function () {
+      var candidateData = [];
+      var names = [];
+      for (var i = 0; i < $scope.filteredItems.length; i++) {
+          var receipt = []
+          receipt = parseInt($scope.filteredItems[i].total_receipts);
+          candidateData.push(receipt);
+          names.push($scope.filteredItems[i].candidate_name);
+      }
+      $scope.chartConfig.series[0].data = candidateData;
+      $scope.chartConfig.xAxis.categories = names;
+    });
 
     $scope.pieChartConfig = function (chartType, data, name, titleText, options) {
       $scope.chartConfig = {
@@ -61,6 +71,7 @@ angular.module('vantageApp')
     };
 
     $scope.barChartConfig = function (chartType, data, name, titleText, options) {
+      //$scope.barChartData = data;
       $scope.chartConfig = {
         chart: {
             renderTo: 'container',
@@ -103,7 +114,6 @@ angular.module('vantageApp')
     $scope.candidateReceipts = function (data) {
   		var candidateData = [];
   		var names = [];
-  		console.log(data);
       for (var i = 0; i < data.length; i++) {
   				var receipt = []
   				receipt = parseInt(data[i].total_receipts);
