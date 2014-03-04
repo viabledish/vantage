@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('vantageApp', 'candidateSearch'));
+  beforeEach(module('vantageApp'));
 
   var nytCandidateSearchJSON = {
           status: "OK", 
@@ -83,16 +83,12 @@ describe('Controller: MainCtrl', function () {
 
   var $httpBackend;
 
-  var defaultJSON;
-
   var nytPresCamp = 'http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/totals.json?api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK';
   var nytCandidateSearch = 'http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/candidates/obama.json?query=&api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK';
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, defaultJSON) {
+  beforeEach(inject(function ($controller, $rootScope, $injector) {
     // Set up the mock http service responses
     $httpBackend = $injector.get('$httpBackend');
-
-    defaultJSON = defaultJSON;
     scope = $rootScope.$new();
     MainCtrl = $controller('MainCtrl', {
       $scope: scope,
