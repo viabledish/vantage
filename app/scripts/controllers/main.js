@@ -12,6 +12,8 @@ angular.module('vantageApp')
     $scope.chartData = [];
     $scope.chartConfig = {};
 
+    $scope.filteredItems;
+
     $scope.candidateResult = [];
     $scope.candidateDefs = 
                   [{ field: 'candidate_id', displayName: 'Candidate ID', width: "150"},
@@ -22,7 +24,6 @@ angular.module('vantageApp')
     $scope.getItems = function() {
       $http.jsonp('http://api.nytimes.com/svc/elections/us/v3/finances/2008/president/totals.json?api-key=85c32d59cd9256167606de14f60ebe95:11:20721543&callback=JSON_CALLBACK').success(function (data) {
         $scope.items = data;
-        console.log(data);
       });
     };
 
@@ -32,16 +33,18 @@ angular.module('vantageApp')
     $scope.$watchCollection('filteredItems', function () {
       var candidateData = [];
       var names = [];
-      if ($scope.filteredItems) {
-        for (var i = 0; i < $scope.filteredItems.length; i++) {
-            var receipt = []
-            receipt = parseInt($scope.filteredItems[i].total_receipts);
-            candidateData.push(receipt);
-            names.push($scope.filteredItems[i].candidate_name);
-        }
-        if ($scope.chartConfig.series) {
-          $scope.chartConfig.series[0].data = candidateData;
-          $scope.chartConfig.xAxis.categories = names;
+      if ($scope.chartConfig.options.chart.type == 'bar') {
+        if ($scope.filteredItems) {
+          for (var i = 0; i < $scope.filteredItems.length; i++) {
+              var receipt = []
+              receipt = parseInt($scope.filteredItems[i].total_receipts);
+              candidateData.push(receipt);
+              names.push($scope.filteredItems[i].candidate_name);
+          }
+          if ($scope.chartConfig.series) {
+            $scope.chartConfig.series[0].data = candidateData;
+            $scope.chartConfig.xAxis.categories = names;
+          }
         }
       }
     });
@@ -134,7 +137,6 @@ angular.module('vantageApp')
         candidateData.total_contributions = data.results[0].total_contributions;
         candidateData.total_receipts_party_rank = data.results[0].total_receipts_party_rank;
         $scope.candidateResult = [candidateData];
-        console.log(data);
       });
     };
 });

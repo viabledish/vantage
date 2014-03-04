@@ -53,30 +53,50 @@ describe('Controller: MainCtrl', function () {
     var nytPresCampJSON = {
                           status: "OK", 
                           copyright: "Copyright (c) 2014 The New York Times Company. All Rights Reserved.", 
-                          results: [{hashKey: "006",
-                          candidate_id: "P80003338",
-                          candidate_name: "Obama, Barack",
-                          cash_on_hand: "29911984.0",
-                          committee: "committees/C00431445.json",
-                          committee_id: "C00431445",
-                          date_coverage_from: "2007-01-01",
-                          date_coverage_to: "2008-11-24",
-                          name: "Barack Obama",
-                          party: "D",
-                          total_disbursements: "740557859.5",
-                          total_receipts: "770469844.0"},
-                          {hashKey: "007",
-                          candidate_id: "P80002801",
-                          candidate_name: "McCain, John",
-                          cash_on_hand: "32812513.75",
-                          committee: "committees/C00430470.json",
-                          committee_id: "C00430470",
-                          date_coverage_from: "2006-10-01",
-                          date_coverage_to: "2008-11-24",
-                          name: "John McCain",
-                          party: "R",
-                          total_disbursements: "362567196.7",
-                          total_receipts: "395379707.1"}]};
+                          results: [
+                          {
+                            hashKey: "006",
+                            candidate_id: "P80003338",
+                            candidate_name: "Obama, Barack",
+                            cash_on_hand: "29911984.0",
+                            committee: "committees/C00431445.json",
+                            committee_id: "C00431445",
+                            date_coverage_from: "2007-01-01",
+                            date_coverage_to: "2008-11-24",
+                            name: "Barack Obama",
+                            party: "D",
+                            total_disbursements: "740557859.5",
+                            total_receipts: "20"
+                          },
+                          {
+                            hashKey: "007",
+                            candidate_id: "P80002801",
+                            candidate_name: "McCain, John",
+                            cash_on_hand: "32812513.75",
+                            committee: "committees/C00430470.json",
+                            committee_id: "C00430470",
+                            date_coverage_from: "2006-10-01",
+                            date_coverage_to: "2008-11-24",
+                            name: "John McCain",
+                            party: "R",
+                            total_disbursements: "362567196.7",
+                            total_receipts: "10"
+                          },
+                          {
+                            hashKey: "008",
+                            candidate_id: "P80003353",
+                            candidate_name: "Romney, Mitt",
+                            cash_on_hand: "16655.58",
+                            committee: "committees/C00431171.json",
+                            committee_id: "C00431171",
+                            date_coverage_from: "2006-10-25",
+                            date_coverage_to: "2008-10-31",
+                            name: "Mitt Romney",
+                            party: "R",
+                            total_disbursements: "113608751.6",
+                            total_receipts: "5"
+                          }
+                          ]};
 
   var MainCtrl,
     scope;
@@ -112,7 +132,7 @@ describe('Controller: MainCtrl', function () {
     beforeEach(function() {
       spyOn(scope, 'getItems').andCallThrough();
     });
-    it('should call NYTIMES api', function () {
+    it('should call NYTIMES api and set scope.items', function () {
       $httpBackend.whenJSONP(nytPresCamp).respond(nytPresCampJSON);
       $httpBackend.expectJSONP(nytPresCamp);
       scope.getItems();
@@ -129,7 +149,7 @@ describe('Controller: MainCtrl', function () {
       spyOn(scope, 'partySpend').andCallThrough();
       spyOn(scope, 'pieChartConfig').andCallThrough();
       scope.partySpend(nytPresCampJSON);
-      expect(scope.pieChartConfig).toHaveBeenCalledWith('pie', [['Democrats',770469844],['Republicans', 395379707]], 'Party Spend', 'US 2008 Campaign Spend by Party');
+      expect(scope.pieChartConfig).toHaveBeenCalledWith('pie', [['Democrats',20],['Republicans', 15]], 'Party Spend', 'US 2008 Campaign Spend by Party');
     });
   });
 
@@ -141,7 +161,7 @@ describe('Controller: MainCtrl', function () {
       spyOn(scope, 'candidateReceipts').andCallThrough();
       spyOn(scope, 'barChartConfig').andCallThrough();
       scope.candidateReceipts(nytPresCampJSON.results);
-      expect(scope.barChartConfig).toHaveBeenCalledWith('bar',[770469844, 395379707], ['Obama, Barack', 'McCain, John'], 'US 2008 Campaign Total Receipts by Candidate');
+      expect(scope.barChartConfig).toHaveBeenCalledWith('bar',[20, 10, 5], ['Obama, Barack', 'McCain, John', 'Romney, Mitt'], 'US 2008 Campaign Total Receipts by Candidate');
     });
   });
 
